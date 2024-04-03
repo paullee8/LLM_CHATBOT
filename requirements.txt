@@ -1,0 +1,16 @@
+openpyxl
+pandas
+streamlit
+streamlit_chat
+langchain
+python-dotenv
+openai
+faiss-cpu
+sentence-transformers
+pypdf
+pdfminer
+pdf2image
+unstructured
+chromadb
+langchain-openai
+langchain-experimental
