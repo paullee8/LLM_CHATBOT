@@ -3,6 +3,8 @@ from streamlit_chat import message
 import os, re, copy, time, base64, asyncio
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import pandas as pd
+import datetime
+import docx
 
 from langchain_openai.chat_models import AzureChatOpenAI
 from langchain.prompts import (ChatPromptTemplate,PromptTemplate,SystemMessagePromptTemplate,HumanMessagePromptTemplate,PipelinePromptTemplate)
@@ -147,10 +149,22 @@ async def main():
     df = pd.DataFrame(st.session_state.docu_name , columns=['File stored'])
     st.sidebar.dataframe(df,hide_index=True,width=500)
 
-
     df_options = st.sidebar.multiselect(
                                     'DataFrame',
                                     df_dict)
+    
+    if st.sidebar.button("Save Conversation"):
+        chat_name = datetime.datetime.now()
+        chat_name = chat_name.strftime('%Y_%m_%d_%I_%M_%p') + "_chat_history"
+        file_path = os.path.join(os.getcwd(), chat_name)
+        file_path = file_path.split('/')
+        file_path.insert(-1,'temp_docu_storage')
+        file_path = "/".join(file_path)
+        doc = docx.Document()
+        doc.add_paragraph(st.session_state['history'])
+        doc.save(file_path+".docx")
+
+   
     
     llm_model, temperature_levels = model_seletion(openai_api_base_value, openai_api_version_value,deployment_name_value, 
                                                    openai_api_key_value, openai_api_type_value,temperature_levels)
